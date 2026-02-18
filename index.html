@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoVendas Pro - Sistema de Avaliação</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #fef2f2 0%, #fed7aa 50%, #fef3c7 100%); min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+        .card { background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%); color: white; padding: 2rem; }
+        .title { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .subtitle { color: #fecaca; font-size: 0.875rem; }
+        .content { padding: 2rem; }
+        .grid { display: grid; gap: 1rem; }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        label { display: block; font-weight: 600; font-size: 0.875rem; color: #374151; margin-bottom: 0.5rem; }
+        input, select, textarea { width: 100%; padding: 0.75rem; border: 2px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem; transition: border-color 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #dc2626; }
+        textarea { resize: none; font-family: inherit; }
+        .btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%); color: white; border: none; border-radius: 0.75rem; font-weight: 700; font-size: 1.125rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(220,38,38,0.3); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(220,38,38,0.4); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .stat-card { padding: 1rem; border-radius: 0.75rem; border: 2px solid; }
+        .stat-card p:first-child { font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem; }
+        .stat-card p:last-child { font-size: 1.25rem; font-weight: 700; }
+        .blue { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+        .orange { background: #fff7ed; border-color: #fed7aa; color: #c2410c; }
+        .yellow { background: #fefce8; border-color: #fef08a; color: #a16207; }
+        .purple { background: #faf5ff; border-color: #e9d5ff; color: #7c3aed; }
+        .red { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+        .green { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; }
+        .info-box { background: linear-gradient(135deg, #fef2f2 0%, #fed7aa 100%); padding: 1.5rem; border-radius: 0.75rem; border: 2px solid #fecaca; }
+        .info-title { font-weight: 700; font-size: 1.125rem; color: #991b1b; margin-bottom: 1rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; }
+        .info-item { background: white; padding: 0.75rem; border-radius: 0.5rem; }
+        .info-item p:first-child { font-size: 0.75rem; color: #6b7280; }
+        .info-item p:last-child { font-weight: 600; color: #111827; margin-top: 0.25rem; }
+        .checkbox-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .checkbox-label { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; cursor: pointer; }
+        .checkbox-label input { width: 1.25rem; height: 1.25rem; cursor: pointer; }
+        .section { background: #f9fafb; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1rem; }
+        .section-title { font-weight: 700; margin-bottom: 0.75rem; }
+        .condition-boxes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 0.75rem; }
+        .condition-box { padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600; font-size: 0.875rem; }
+        .condition-ok { background: #dcfce7; color: #166534; }
+        .condition-fail { background: #fee2e2; color: #991b1b; }
+        .obs-box { background: white; padding: 0.75rem; border-radius: 0.5rem; border: 2px solid #e5e7eb; }
+        .obs-box p:first-child { font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem; }
+        .obs-box p:last-child { font-weight: 600; font-size: 0.875rem; }
+        .hero { text-align: center; margin-bottom: 2rem; }
+        .hero-icon { width: 4rem; height: 4rem; background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1rem; }
+        .hero-title { font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem; }
+        .hero-subtitle { color: #6b7280; }
+        .warning-box { background: linear-gradient(135deg, #fed7aa 0%, #fecaca 100%); padding: 1rem; border-radius: 0.75rem; border: 2px solid #fb923c; text-align: center; margin-bottom: 1.5rem; }
+        .warning-box p { font-weight: 600; color: #7c2d12; }
+        .lojista-box { background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); padding: 1.5rem; border-radius: 0.75rem; border: 2px solid #fde047; margin-bottom: 1.5rem; }
+        .lojista-title { font-weight: 700; font-size: 1.125rem; color: #c2410c; margin-bottom: 0.75rem; }
+        .lojista-box p { font-weight: 600; color: #111827; margin-top: 0.5rem; }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .info-grid { grid-template-columns: 1fr; }
+            .condition-boxes { grid-template-columns: 1fr; }
+            .title { font-size: 1.5rem; }
+            .hero-title { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        const carrosDB = {
+            'Peugeot': {
+                '207': { anos: [2015,2014,2013,2012,2011,2010,2009,2008], configs: ['1.4 XR','1.6 XS','1.6 XS AT'], base: 35000, fipe: {2015:28500,2014:26800,2013:25200,2012:23600,2011:22100,2010:20800,2009:19500,2008:18200} },
+                '208': { anos: [2024,2023,2022,2021,2020,2019], configs: ['1.2 Active','1.6 Allure AT','1.6 Griffe AT'], base: 82000, fipe: {2024:85900,2023:79800,2022:73500,2021:68200,2020:62800,2019:58400} },
+                '2008': { anos: [2024,2023,2022,2021,2020], configs: ['1.6 Allure AT','1.6 Griffe AT'], base: 105000, fipe: {2024:110200,2023:102100,2022:94800,2021:88400,2020:82600} }
+            },
+            'Chevrolet': {
+                'Onix': { anos: [2024,2023,2022,2021,2020,2019,2018], configs: ['1.0 Joy','1.0 Turbo Premier AT','1.4 LT'], base: 75000, fipe: {2024:78600,2023:72400,2022:66800,2021:61500,2020:56900,2019:52800,2018:49200} },
+                'Onix Plus': { anos: [2024,2023,2022,2021,2020], configs: ['1.0 LT','1.0 Turbo Premier AT'], base: 82000, fipe: {2024:86100,2023:79600,2022:73800,2021:68600,2020:63900} },
+                'Tracker': { anos: [2024,2023,2022,2021,2020], configs: ['1.0 Turbo AT','1.2 Turbo Premier AT'], base: 120000, fipe: {2024:126400,2023:117200,2022:109100,2021:101800,2020:95200} },
+                'S10': { anos: [2024,2023,2022,2021,2020], configs: ['2.8 Diesel 4x4 LTZ AT','2.5 Flex LT'], base: 215000, fipe: {2024:226400,2023:210100,2022:195800,2021:183200,2020:171600} }
+            },
+            'Volkswagen': {
+                'Gol': { anos: [2024,2023,2022,2021,2020,2019], configs: ['1.0','1.0 Comfortline','1.6 AT'], base: 65000, fipe: {2024:68200,2023:63100,2022:58400,2021:54200,2020:50600,2019:47400} },
+                'Polo': { anos: [2024,2023,2022,2021,2020], configs: ['1.0 TSI','1.0 TSI Comfortline AT'], base: 85000, fipe: {2024:89200,2023:82600,2022:76800,2021:71500,2020:66900} },
+                'T-Cross': { anos: [2024,2023,2022,2021,2020], configs: ['200 TSI AT','250 TSI Highline AT'], base: 135000, fipe: {2024:142100,2023:131800,2022:122900,2021:115200,2020:108100} },
+                'Amarok': { anos: [2024,2023,2022,2021,2020], configs: ['2.0 TDI 4x4 Highline AT'], base: 245000, fipe: {2024:258100,2023:239600,2022:223600,2021:209800,2020:197200} }
+            },
+            'Fiat': {
+                'Argo': { anos: [2024,2023,2022,2021,2020], configs: ['1.0 Drive','1.3 Trekking','1.8 Precision AT'], base: 68000, fipe: {2024:71400,2023:66200,2022:61500,2021:57200,2020:53600} },
+                'Toro': { anos: [2024,2023,2022,2021,2020], configs: ['1.8 Freedom AT','2.0 Diesel Ranch AT'], base: 145000, fipe: {2024:152600,2023:141600,2022:132200,2021:124100,2020:116900} },
+                'Pulse': { anos: [2024,2023,2022], configs: ['1.0 Turbo Drive AT','1.3 Turbo Audace AT'], base: 95000, fipe: {2024:99900,2023:92700,2022:86500} }
+            },
+            'Hyundai': {
+                'HB20': { anos: [2024,2023,2022,2021,2020], configs: ['1.0 Sense','1.0 Turbo Platinum AT'], base: 72000, fipe: {2024:75600,2023:70100,2022:65200,2021:60800,2020:56700} },
+                'Creta': { anos: [2024,2023,2022,2021,2020], configs: ['1.6 Smart AT','2.0 Platinum AT'], base: 125000, fipe: {2024:131600,2023:122100,2022:113900,2021:106900,2020:100600} }
+            },
+            'Toyota': {
+                'Corolla': { anos: [2024,2023,2022,2021,2020], configs: ['1.8 GLi AT','2.0 XEi AT','2.0 Altis Hybrid'], base: 145000, fipe: {2024:152400,2023:141200,2022:131800,2021:123600,2020:116500} },
+                'Hilux': { anos: [2024,2023,2022,2021,2020], configs: ['2.8 Diesel 4x4 SRV AT'], base: 275000, fipe: {2024:289500,2023:268700,2022:251200,2021:236100,2020:222700} }
+            },
+            'Honda': {
+                'Civic': { anos: [2024,2023,2022,2021,2020], configs: ['2.0 CVT LX','2.0 CVT Sport'], base: 155000, fipe: {2024:163100,2023:151400,2022:141600,2021:133200,2020:125800} },
+                'HR-V': { anos: [2024,2023,2022,2021,2020], configs: ['1.5 Turbo Advance'], base: 145000, fipe: {2024:152600,2023:141600,2022:132400,2021:124600,2020:117700} }
+            },
+            'Nissan': {
+                'Kicks': { anos: [2024,2023,2022,2021,2020], configs: ['1.6 CVT S','1.6 CVT SV'], base: 112000, fipe: {2024:117900,2023:109400,2022:102300,2021:96200,2020:90900} }
+            },
+            'Renault': {
+                'Kwid': { anos: [2024,2023,2022,2021,2020], configs: ['1.0 Zen','1.0 Intense'], base: 59000, fipe: {2024:62100,2023:57700,2022:53900,2021:50800,2020:48100} },
+                'Sandero': { anos: [2024,2023,2022,2021,2020], configs: ['1.0 Zen','1.6 CVT Intense'], base: 78000, fipe: {2024:82100,2023:76200,2022:71100,2021:66900,2020:63200} }
+            },
+            'Jeep': {
+                'Renegade': { anos: [2024,2023,2022,2021,2020], configs: ['1.8 AT Sport','1.3 Turbo Longitude AT'], base: 135000, fipe: {2024:142100,2023:131800,2022:123400,2021:116200,2020:110000} },
+                'Compass': { anos: [2024,2023,2022,2021,2020], configs: ['1.3 Turbo Sport AT','2.0 Turbo Limited AT'], base: 179000, fipe: {2024:188500,2023:175000,2022:163800,2021:154200,2020:145900} }
+            },
+            'Ford': {
+                'Ranger': { anos: [2024,2023,2022,2021,2020], configs: ['2.2 Diesel 4x4 XLS AT'], base: 249000, fipe: {2024:262200,2023:243400,2022:227800,2021:214500,2020:202800} }
+            }
+        };
+
+        let dados = { marca: '', modelo: '', ano: '', config: '', km: '', combustivel: '', cambio: '', pneus: '', opcionais: '', cor: '', motorOk: false, cambioOk: false, arOk: false, condicaoTexto: '', gastoMec: '', gastoLat: '', gastoPint: '', gastoOut: '', pedido: '', vendNome: '', vendTel: '' };
+        let resultado = null;
+
+        const fmt = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
+
+        function calcular() {
+            const carData = carrosDB[dados.marca][dados.modelo];
+            const fipeVal = carData.fipe[dados.ano] || carData.base;
+            const idade = 2024 - parseInt(dados.ano);
+            let valor = carData.base * Math.pow(0.93, idade);
+            const km = parseInt(dados.km);
+            if (km > 150000) valor *= 0.75;
+            else if (km > 100000) valor *= 0.85;
+            else if (km > 70000) valor *= 0.90;
+            else if (km > 50000) valor *= 0.95;
+            const gastos = (parseFloat(dados.gastoMec) || 0) + (parseFloat(dados.gastoLat) || 0) + (parseFloat(dados.gastoPint) || 0) + (parseFloat(dados.gastoOut) || 0);
+            const problemas = [dados.motorOk, dados.cambioOk, dados.arOk].filter(v => !v).length * 500;
+            const final = valor - (gastos * 0.7) - problemas;
+            resultado = { valorOriginal: carData.base, valorDepreciado: valor, totalGastos: gastos, valorFinal: final > 0 ? final : 10000, depreciacaoPercentual: ((carData.base - valor) / carData.base * 100).toFixed(1), km: km, fipe: fipeVal, pedido: parseFloat(dados.pedido) || 0 };
+            render();
+        }
+
+        function resetar() {
+            dados = { marca: '', modelo: '', ano: '', config: '', km: '', combustivel: '', cambio: '', pneus: '', opcionais: '', cor: '', motorOk: false, cambioOk: false, arOk: false, condicaoTexto: '', gastoMec: '', gastoLat: '', gastoPint: '', gastoOut: '', pedido: '', vendNome: '', vendTel: '' };
+            resultado = null;
+            render();
+        }
+
+        function renderResultado() {
+            return `
+                <div class="container">
+                    <div class="card">
+                        <div class="header">
+                            <div class="title">📋 Relatório de Avaliação</div>
+                            <p class="subtitle">${dados.marca} ${dados.modelo} ${dados.ano}</p>
+                            <p class="subtitle">${dados.config}</p>
+                        </div>
+                        <div class="content">
+                            <div class="grid grid-2" style="margin-bottom: 1.5rem;">
+                                <div class="stat-card blue"><p>Valor Original</p><p>${fmt(resultado.valorOriginal)}</p></div>
+                                <div class="stat-card orange"><p>Depreciação</p><p>${resultado.depreciacaoPercentual}%</p></div>
+                                <div class="stat-card yellow"><p>💰 FIPE</p><p>${fmt(resultado.fipe)}</p></div>
+                                ${resultado.pedido > 0 ? `<div class="stat-card purple"><p>Pedido Cliente</p><p>${fmt(resultado.pedido)}</p></div>` : ''}
+                                <div class="stat-card red"><p>Total Gastos</p><p>${fmt(resultado.totalGastos)}</p></div>
+                                <div class="stat-card green"><p>🔥 MANDAR PROPOSTA 🔥</p><p>${fmt(resultado.valorFinal)}</p></div>
+                            </div>
+                            <div class="info-box" style="margin-bottom: 1.5rem;">
+                                <div class="info-title">🚗 Dados do Veículo</div>
+                                <div class="info-grid">
+                                    <div class="info-item"><p>⛽ Combustível</p><p>${dados.combustivel || 'N/A'}</p></div>
+                                    <div class="info-item"><p>🚗 Câmbio</p><p>${dados.cambio || 'N/A'}</p></div>
+                                    <div class="info-item"><p>🛞 Pneus</p><p>${dados.pneus || 'N/A'}</p></div>
+                                    <div class="info-item"><p>🎨 Cor</p><p>${dados.cor || 'N/A'}</p></div>
+                                    <div class="info-item"><p>📊 KM</p><p>${resultado.km.toLocaleString('pt-BR')}</p></div>
+                                    <div class="info-item"><p>🎯 Opcionais</p><p>${dados.opcionais || 'COMPLETO'}</p></div>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <div class="section-title">✅ Condição</div>
+                                <div class="condition-boxes">
+                                    <div class="${dados.motorOk ? 'condition-ok' : 'condition-fail'}">${dados.motorOk ? '✅' : '❌'} MOTOR</div>
+                                    <div class="${dados.cambioOk ? 'condition-ok' : 'condition-fail'}">${dados.cambioOk ? '✅' : '❌'} CÂMBIO</div>
+                                    <div class="${dados.arOk ? 'condition-ok' : 'condition-fail'}">${dados.arOk ? '✅' : '❌'} AR ACIONA</div>
+                                </div>
+                                ${dados.condicaoTexto ? `<div class="obs-box"><p>📝 Observações:</p><p>${dados.condicaoTexto}</p></div>` : ''}
+                            </div>
+                            ${dados.vendNome ? `<div class="lojista-box"><div class="lojista-title">🔵 ATENDIMENTO LOJISTA</div><p>📞 ${dados.vendNome}</p><p>☎️ ${dados.vendTel}</p></div>` : ''}
+                            <div class="warning-box"><p>⚠️ GASTO: ${resultado.totalGastos > 0 ? fmt(resultado.totalGastos) : 'EXTRA SEM GASTO'}</p></div>
+                            <button class="btn" onclick="resetar()">🔄 Nova Avaliação</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderFormulario() {
+            return `
+                <div class="container">
+                    <div class="hero">
+                        <div class="hero-icon">🚗</div>
+                        <div class="hero-title">AutoVendas Pro</div>
+                        <p class="hero-subtitle">Sistema profissional com +100 modelos</p>
+                    </div>
+                    <div class="card">
+                        <div class="header">
+                            <div class="title">Avaliação de Veículo</div>
+                        </div>
+                        <div class="content">
+                            <div class="grid grid-2">
+                                <div><label>Marca</label><select id="marca"><option value="">Selecione</option>${Object.keys(carrosDB).map(m => `<option value="${m}"${dados.marca === m ? ' selected' : ''}>${m}</option>`).join('')}</select></div>
+                                ${dados.marca ? `<div><label>Modelo</label><select id="modelo"><option value="">Selecione</option>${Object.keys(carrosDB[dados.marca]).map(m => `<option value="${m}"${dados.modelo === m ? ' selected' : ''}>${m}</option>`).join('')}</select></div>` : '<div></div>'}
+                            </div>
+                            ${dados.modelo ? `
+                            <div class="grid grid-2" style="margin-top: 1rem;">
+                                <div><label>Ano</label><select id="ano"><option value="">Selecione</option>${carrosDB[dados.marca][dados.modelo].anos.map(a => `<option value="${a}"${dados.ano == a ? ' selected' : ''}>${a}</option>`).join('')}</select></div>
+                                <div><label>Configuração</label><select id="config"><option value="">Selecione</option>${carrosDB[dados.marca][dados.modelo].configs.map(c => `<option value="${c}"${dados.config === c ? ' selected' : ''}>${c}</option>`).join('')}</select></div>
+                            </div>
+                            <div class="grid grid-2" style="margin-top: 1rem;">
+                                <div><label>📊 Km</label><input type="number" id="km" value="${dados.km}" placeholder="178788"></div>
+                                <div><label>⛽ Combustível</label><select id="combustivel"><option value="">Selecione</option><option value="FLEX"${dados.combustivel === 'FLEX' ? ' selected' : ''}>FLEX</option><option value="Gasolina"${dados.combustivel === 'Gasolina' ? ' selected' : ''}>Gasolina</option><option value="Diesel"${dados.combustivel === 'Diesel' ? ' selected' : ''}>Diesel</option></select></div>
+                            </div>
+                            <div class="grid grid-2" style="margin-top: 1rem;">
+                                <div><label>🚗 Câmbio</label><select id="cambio"><option value="">Selecione</option><option value="AUT"${dados.cambio === 'AUT' ? ' selected' : ''}>AUT</option><option value="Manual"${dados.cambio === 'Manual' ? ' selected' : ''}>Manual</option></select></div>
+                                <div><label>🛞 Pneus</label><input type="text" id="pneus" value="${dados.pneus}" placeholder="4 BONS"></div>
+                            </div>
+                            <div class="grid grid-2" style="margin-top: 1rem;">
+                                <div><label>🎯 Opcionais</label><input type="text" id="opcionais" value="${dados.opcionais}" placeholder="COMPLETO"></div>
+                                <div><label>🎨 Cor</label><input type="text" id="cor" value="${dados.cor}" placeholder="Cinza"></div>
+                            </div>
+                            <div class="section" style="margin-top: 1rem;">
+                                <div class="section-title">✅ Condição do Veículo</div>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label"><input type="checkbox" id="motorOk"${dados.motorOk ? ' checked' : ''}> MOTOR ACIONA</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="cambioOk"${dados.cambioOk ? ' checked' : ''}> CÂMBIO FUNCIONA</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="arOk"${dados.arOk ? ' checked' : ''}> AR ACIONA</label>
+                                </div>
+                                <div style="margin-top: 1rem;"><label>Pedido do Cliente (R$)</label><input type="number" id="pedido" value="${dados.pedido}" placeholder="16900.00"></div>
+                            <div class="grid grid-2" style="margin-top: 1rem;">
+                                <div><label>📞 Vendedor</label><input type="text" id="vendNome" value="${dados.vendNome}" placeholder="JOÃO"></div>
+                                <div><label>☎️ Telefone</label><input type="text" id="vendTel" value="${dados.vendTel}" placeholder="(45) 9 9852-0969"></div>
+                            </div>
+                            <button class="btn" onclick="calcular()" ${!dados.km ? 'disabled' : ''} style="margin-top: 1.5rem;">🔥 Calcular Avaliação</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function render() {
+            document.getElementById('app').innerHTML = resultado ? renderResultado() : renderFormulario();
+            
+            if (!resultado) {
+                const addEvent = (id, event, handler) => {
+                    const el = document.getElementById(id);
+                    if (el) el.addEventListener(event, handler);
+                };
+
+                addEvent('marca', 'change', (e) => { dados.marca = e.target.value; dados.modelo = ''; dados.ano = ''; dados.config = ''; render(); });
+                addEvent('modelo', 'change', (e) => { dados.modelo = e.target.value; dados.ano = ''; dados.config = ''; render(); });
+                addEvent('ano', 'change', (e) => { dados.ano = e.target.value; render(); });
+                addEvent('config', 'change', (e) => { dados.config = e.target.value; render(); });
+                addEvent('km', 'input', (e) => { dados.km = e.target.value; render(); });
+                addEvent('combustivel', 'change', (e) => { dados.combustivel = e.target.value; });
+                addEvent('cambio', 'change', (e) => { dados.cambio = e.target.value; });
+                addEvent('pneus', 'input', (e) => { dados.pneus = e.target.value; });
+                addEvent('opcionais', 'input', (e) => { dados.opcionais = e.target.value; });
+                addEvent('cor', 'input', (e) => { dados.cor = e.target.value; });
+                addEvent('motorOk', 'change', (e) => { dados.motorOk = e.target.checked; });
+                addEvent('cambioOk', 'change', (e) => { dados.cambioOk = e.target.checked; });
+                addEvent('arOk', 'change', (e) => { dados.arOk = e.target.checked; });
+                addEvent('condicaoTexto', 'input', (e) => { dados.condicaoTexto = e.target.value; });
+                addEvent('gastoMec', 'input', (e) => { dados.gastoMec = e.target.value; });
+                addEvent('gastoLat', 'input', (e) => { dados.gastoLat = e.target.value; });
+                addEvent('gastoPint', 'input', (e) => { dados.gastoPint = e.target.value; });
+                addEvent('gastoOut', 'input', (e) => { dados.gastoOut = e.target.value; });
+                addEvent('pedido', 'input', (e) => { dados.pedido = e.target.value; });
+                addEvent('vendNome', 'input', (e) => { dados.vendNome = e.target.value; });
+                addEvent('vendTel', 'input', (e) => { dados.vendTel = e.target.value; });
+            }
+        }
+
+        render();
+    </script>
+</body>
+</html>="margin-top: 1rem;"><label>📝 Observações da Condição</label><textarea id="condicaoTexto" rows="3" placeholder="Ex: Suspensão boa, Pneus novos...">${dados.condicaoTexto}</textarea></div>
+                            </div>
+                            <div class="section" style="margin-top: 1rem;">
+                                <div class="section-title">💰 Gastos Necessários</div>
+                                <div class="grid grid-2">
+                                    <input type="number" id="gastoMec" value="${dados.gastoMec}" placeholder="Mecânica (R$)">
+                                    <input type="number" id="gastoLat" value="${dados.gastoLat}" placeholder="Lataria (R$)">
+                                    <input type="number" id="gastoPint" value="${dados.gastoPint}" placeholder="Pintura (R$)">
+                                    <input type="number" id="gastoOut" value="${dados.gastoOut}" placeholder="Outros (R$)">
+                                </div>
+                            </div>
+                            <div style
